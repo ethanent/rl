@@ -1,7 +1,6 @@
 package rl
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -39,8 +38,6 @@ func LimitWrap(d time.Duration, max int, handler http.HandlerFunc) http.HandlerF
 		countsMux.Lock()
 		useIP := removePort(r.RemoteAddr)
 		counts[useIP]++
-
-		fmt.Println(useIP)
 
 		curCount := counts[useIP]
 		countsMux.Unlock()
