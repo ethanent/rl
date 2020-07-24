@@ -40,7 +40,7 @@ func TestRl(t *testing.T) {
 		count++
 	}
 
-	wrappedHandler := LimitWrap(time.Second * 1, 4, testHandler)
+	wrappedHandler := LimitWrap(time.Millisecond * 400, 4, testHandler)
 
 	for i := 0; i < 4; i++ {
 		testRw := simReq(wrappedHandler, &http.Request{
@@ -64,8 +64,11 @@ func TestRl(t *testing.T) {
 		}
 	}
 
+	// Use different port to check for 429 in order to ensure that
+	// rl determines IP accurately.
+
 	testRw := simReq(wrappedHandler, &http.Request{
-		RemoteAddr: "0.0.0.0:57575",
+		RemoteAddr: "0.0.0.0:57775",
 	})
 
 	if testRw != 429 {
@@ -73,7 +76,7 @@ func TestRl(t *testing.T) {
 		t.FailNow()
 	}
 
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Millisecond * 600)
 
 	testRw = simReq(wrappedHandler, &http.Request{
 		RemoteAddr: "0.0.0.0:57575",
